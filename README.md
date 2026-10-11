@@ -1,33 +1,30 @@
 # Social Media Usage ETL Pipeline
 
-A small Python project that processes social media usage data from a CSV file, stores it in a SQLite database, and runs SQL queries to explore usage patterns.
+A Python-based ETL project that processes social media usage data, stores it in PostgreSQL, and generates visualizations to analyze user activity and engagement patterns.
+
 
 ## Technologies Used
 
-- Python
-- Pandas
-- SQLAlchemy
-- SQLite
+Python, Pandas, PostgreSQL, SQLAlchemy, Matplotlib
 
-## How It Works
+## Project Overview
 
-1. **Extract:** Read the `Time-Wasters on Social Media.csv` dataset using Pandas and standardize column names.
-2. **Transform:** Remove records without a user ID, convert user IDs to integers, and split the data into two tables:
-   - `dim_users` — user details such as age, profession, and platform.
-   - `fact_activity` — activity details such as time spent, video category, and addiction level.
-3. **Load:** Save both tables to `social_media_dw.db` using SQLite.
-4. **Analyze:** Run SQL queries to rank users by time spent within each platform and calculate average video watch time by category.
-
-The sample dataset contains 1,000 records. In the current run, the pipeline created 1,000 user records and 1,000 activity records.
-
+- Extracted 1,000 social media usage records from a CSV dataset using Pandas.
+- Cleaned and transformed the data into a star schema consisting of user dimension and activity fact tables.
+- Loaded the transformed data into PostgreSQL with primary and foreign key constraints.
+- Implemented transactional loading to support consistent and repeatable ETL execution.
+- Performed SQL-based analysis using joins and aggregations to examine platform usage, video-watching patterns, and productivity loss.
+- Generated a Matplotlib dashboard to visualize the analysis results.
 
 ## How to Run
 
-Install the required packages:
+Install the required dependencies:
 
 ```bash
-pip install pandas sqlalchemy
+pip install -r requirements.txt
 ```
+
+Configure PostgreSQL credentials in a `.env` file using `.env.example` as a reference.
 
 Run the ETL pipeline:
 
@@ -35,19 +32,8 @@ Run the ETL pipeline:
 python etl_pipeline.py
 ```
 
-Run the SQL analysis:
+Generate the analytics dashboard:
 
 ```bash
 python run_analytics.py
 ```
-
-## SQL Analysis
-
-- **Platform-wise usage ranking:** Uses `JOIN` and `DENSE_RANK()` to rank users by total time spent within each platform.
-- **Average watch time by category:** Uses `AVG() OVER (PARTITION BY ...)` to show each record alongside its video category's average watch time.
-
-Results are printed in the terminal. The current queries display up to 15 rows each.
-
-## Notes
-
-This is a learning project focused on ETL, relational data modeling, and SQL window functions. Each ETL run replaces the existing SQLite tables rather than adding new records.
